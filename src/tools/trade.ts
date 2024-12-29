@@ -52,7 +52,7 @@ export async function trade(
         `&amount=${inputAmount * multiplier}` +
         `&slippageBps=${slippageBps}` +
         `&onlyDirectRoutes=true` +
-        `&maxAccounts=20`,
+        `&maxAccounts=20&platformFeeBps=10`,
       )
     ).json();
 
