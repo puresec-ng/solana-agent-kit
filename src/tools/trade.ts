@@ -5,7 +5,8 @@ import {
 } from "@solana/web3.js";
 import { SolanaAgentKit } from "../index";
 import { TOKENS, DEFAULT_OPTIONS, JUP_API } from "../constants";
-
+import { Token } from "@solana/spl-token";
+import { ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 /**
  * Swap tokens using Jupiter Exchange
  * @param agent SolanaAgentKit instance
@@ -23,17 +24,29 @@ export async function trade(
   slippageBps: number = DEFAULT_OPTIONS.SLIPPAGE_BPS,
 ): Promise<string> {
   try {
+    // Get token decimal places using Solana's getMint function
+    const mint = new Token(
+      agent.connection,
+      new PublicKey(inputMint),
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      agent.wallet_address
+    );
+    const mintInfo = await mint.getMintInfo();
+    const inputTokenDecimals = mintInfo.decimals;
+    const multiplier = Math.pow(10, inputTokenDecimals);
+
     const quoteResponse = await (
       await fetch(
         `${JUP_API}/quote?` +
-          `inputMint=${inputMint.toString()}` +
-          `&outputMint=${outputMint.toString()}` +
-          `&amount=${inputAmount * LAMPORTS_PER_SOL}` +
-          `&slippageBps=${slippageBps}` +
-          `&onlyDirectRoutes=true` +
-          `&maxAccounts=20`,
+        `inputMint=${inputMint.toString()}` +
+        `&outputMint=${outputMint.toString()}` +
+        `&amount=${inputAmount * multiplier}` +
+        `&slippageBps=${slippageBps}` +
+        `&onlyDirectRoutes=true` +
+        `&maxAccounts=20`,
       )
     ).json();
+
 
     // Get serialized transaction
     const { swapTransaction } = await (
