@@ -5,7 +5,7 @@ import {
 } from "@solana/web3.js";
 import { SolanaAgentKit } from "../index";
 import { TOKENS, DEFAULT_OPTIONS, JUP_API } from "../constants";
-import { Token } from "@solana/spl-token";
+import { getMint } from '@solana/spl-token';
 import { ASSOCIATED_TOKEN_PROGRAM_ID } from "@solana/spl-token";
 /**
  * Swap tokens using Jupiter Exchange
@@ -25,13 +25,10 @@ export async function trade(
 ): Promise<string> {
   try {
     // Get token decimal places using Solana's getMint function
-    const mint = new Token(
+    const mintInfo = await getMint(
       agent.connection,
       new PublicKey(inputMint),
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      agent.wallet_address
     );
-    const mintInfo = await mint.getMintInfo();
     const inputTokenDecimals = mintInfo.decimals;
     const multiplier = Math.pow(10, inputTokenDecimals);
 
