@@ -51,8 +51,9 @@ export async function trade(
         `&outputMint=${outputMint.toString()}` +
         `&amount=${inputAmount * multiplier}` +
         `&slippageBps=${slippageBps}` +
-        `&onlyDirectRoutes=true` +
-        `&maxAccounts=20&platformFeeBps=10`,
+        // `&onlyDirectRoutes=true` +
+        // `&maxAccounts=20` +
+        `&platformFeeBps=10`,
       )
     ).json();
 

@@ -34,8 +34,9 @@ async function trade(agent, outputMint, inputAmount, inputMint = constants_1.TOK
             `&outputMint=${outputMint.toString()}` +
             `&amount=${inputAmount * multiplier}` +
             `&slippageBps=${slippageBps}` +
-            `&onlyDirectRoutes=true` +
-            `&maxAccounts=20&platformFeeBps=10`)).json();
+            // `&onlyDirectRoutes=true` +
+            // `&maxAccounts=20` +
+            `&platformFeeBps=10`)).json();
         // Prepare swap request body
         const swapRequestBody = {
             quoteResponse,
